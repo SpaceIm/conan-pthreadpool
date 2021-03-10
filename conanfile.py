@@ -18,10 +18,12 @@ class PthreadpoolConan(ConanFile):
     options = {
         "shared": [True, False],
         "fPIC": [True, False],
+        "sync_primitive": ["default", "condvar", "futex", "gcd", "event"],
     }
     default_options = {
         "shared": False,
         "fPIC": True,
+        "sync_primitive": "default",
     }
 
     exports_sources = "CMakeLists.txt"
@@ -61,7 +63,7 @@ class PthreadpoolConan(ConanFile):
         self._cmake = CMake(self)
         self._cmake.definitions["PTHREADPOOL_LIBRARY_TYPE"] = "default"
         self._cmake.definitions["PTHREADPOOL_ALLOW_DEPRECATED_API"] = True
-        self._cmake.definitions["PTHREADPOOL_SYNC_PRIMITIVE"] = "default"
+        self._cmake.definitions["PTHREADPOOL_SYNC_PRIMITIVE"] = self.options.sync_primitive
         self._cmake.definitions["PTHREADPOOL_BUILD_TESTS"] = False
         self._cmake.definitions["PTHREADPOOL_BUILD_BENCHMARKS"] = False
         self._cmake.definitions["FXDIV_SOURCE_DIR"] = "dummy" # this value doesn't really matter, it's just to avoid a download
